@@ -1,0 +1,13 @@
+# un commentaire commence par #
+
+a	affiche1.jpg	# texture de l'affiche 1
+b	affiche2.jpg	# texture de l'affiche 2
+
+
++-----------b------------------------+
+|                                    |
+| C                    G             |
+|                                    |
+|           T                        |
+|                                    |
++------------------------------------+

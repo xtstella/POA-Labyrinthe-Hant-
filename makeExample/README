@@ -1,0 +1,5 @@
+Type make depend in command line so that all the dependencies are written at the end of the Makefile.
+
+Type make in command line so that we compile all the files at the same time following the rules entered in the Makefile.
+
+Type make clean so that all .o files, the executable and *~ files are removed from the current directory.

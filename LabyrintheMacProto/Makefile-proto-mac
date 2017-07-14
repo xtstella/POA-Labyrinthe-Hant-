@@ -1,0 +1,47 @@
+.SUFFIXES:
+.SUFFIXES:      .cpp .o .h
+
+FMOD		= fmod-mac/4.3
+WFMOD		= fmod-mac/Win-4.3
+MFMOD		= fmod-mac/Developer/FMOD\ Programmers\ API\ Mac/api/inc
+
+O			= Labyrinthe-mac.o Chasseur-mac.o
+OBJ			= Labyrinthe-mac.obj Chasseur-mac.obj
+
+WLIBGLUT	= Libs-mac/glut32.lib
+WINCGLUT	= Libs-mac/include
+
+LIBS64		= $(FMOD)/libfmodex64.so /usr/lib64/libglut.so.3 -lGLU -lGL /usr/lib64/libjpeg.so.62 -lm
+LIBS		= $(FMOD)/libfmodex.so -lglut -lGLU -lGL -ljpeg -lm
+WLIBS		= $(WLIBGLUT) -defaultlib:OPENGL32 -defaultlib:GLU32 gdi32.lib jpeg-mac/libjpeg.lib $(WFMOD)/fmodex_vc.lib
+MLIBS		= -framework GLUT -framework OpenGL -framework Foundation jpeg-mac/libjpeg.a fmod-mac/Developer/FMOD\ Programmers\ API\ Mac/api/lib/libfmodex.dylib
+
+CXX			= g++
+CXXFLAGS	= -I $(MFMOD) -I $(FMOD) -I jpeg -O4 -Wall
+CPP			= cl -nologo
+CPPFLAGS	= -GX -GR -MD -O2 -I $(WFMOD) -I $(WINCGLUT) -I jpeg
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+%.obj : %.cpp
+	$(CPP) $(CPPFLAGS) -c $<
+
+cstrike:	$(O)
+	$(CXX) -o $@ $(O) OpenGL-mac.o $(LIBS)
+
+cstrike64:	$(O)
+	$(CXX) -o $@ $(O) OpenGL64-mac.o $(LIBS64)
+
+macstrike:	$(O)
+	$(CXX) -o $@ MacOpenGL-mac.o $(O) $(MLIBS)
+	install_name_tool -change ./libfmodex.dylib fmod-mac/Developer/FMOD\ Programmers\ API\ Mac/api/lib/libfmodex.dylib $@
+
+cstrike.exe: Labyrinthe-mac.obj Chasseur-mac.obj
+	link -nologo -out:$@ Labyrinthe-mac.obj Chasseur-mac.obj $(WLIBS) -defaultlib:OpenGL-mac.lib
+
+clean:
+	@rm -f cstrike $(O) macstrike cstrike.exe $(OBJ)
+
+Labyrinthe-mac.o:	Labyrinthe-mac.h Chasseur-mac.h Gardien-mac.h
+Chasseur-mac.o: Chasseur-mac.cpp Chasseur-mac.h
